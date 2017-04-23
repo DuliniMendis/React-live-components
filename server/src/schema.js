@@ -4,9 +4,12 @@ import { resolvers } from './resolvers';
 const typeDefs = `
 
 type Component{
-  id: ID!
+  id: ID!,
   type: String,
-  value: String
+  value: String,
+  mask: String,
+  placeholder: String,
+  regex: String
 }
 
 type Query { 

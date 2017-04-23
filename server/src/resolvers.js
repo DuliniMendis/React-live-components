@@ -5,12 +5,18 @@ const components =[
 {
 	id:1,
 	type:'text',
-	value: 'text'
+	value: '',
+	mask: '',
+	placeholder: 'xxx@xxx.com',
+	regex: '^(([^<>()\\[\\]\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$'
 },
 {
 	id:2,
-	type:'number',
-	value: '0'
+	type:'text',
+	value: '',
+	mask: '00-000-000000',
+	placeholder: 'xx-xxx-xxxxxx',
+	regex: ''
 }
 ];
 
