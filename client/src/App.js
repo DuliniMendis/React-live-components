@@ -50,7 +50,8 @@ class App extends Component {
     return (
       <ApolloProvider store={store} client={apolloClient}> 
         <div className="App">
-            <TextBox />
+            <TextBox id={1}/>
+            <TextBox id={2}/>
         </div>
       </ApolloProvider>
     );
