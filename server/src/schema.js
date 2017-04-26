@@ -3,13 +3,24 @@ import { resolvers } from './resolvers';
 
 const typeDefs = `
 
+type regexString{
+	id: ID!,
+	regexStr: String,
+	errorMsg: String
+}
+
 type Component{
   id: ID!,
   type: String,
+  label: String,
   value: String,
   mask: String,
   placeholder: String,
-  regex: String
+  regex: [regexString],
+  description: String,
+  errorMsgs: String,
+  min: Int,
+  max: Int
 }
 
 type Query { 
