@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { ApolloClient,  ApolloProvider,  createNetworkInterface} from 'react-apollo';
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import TextBox from './components/TextBox';
+import InputBox from './components/InputBox';
+import EmailInputBox from './components/EmailInputBox';
+import IntegerInputBox from './components/IntegerInputBox';
+import CurrencyInputBox from './components/CurrencyInputBox';
+import CheckBox from './components/CheckBox';
 import './App.css';
 
 const client = new ApolloClient();
@@ -50,8 +54,13 @@ class App extends Component {
     return (
       <ApolloProvider store={store} client={apolloClient}> 
         <div className="App">
-            <TextBox id={1}/>
-            <TextBox id={2}/>
+            <InputBox id={1}/>
+            <InputBox id={2}/>
+            <InputBox id={3}/>
+            <IntegerInputBox id={4}/>
+            <EmailInputBox id={5}/>
+            <CurrencyInputBox id={6}/>
+            <CheckBox id={7}/>
         </div>
       </ApolloProvider>
     );
