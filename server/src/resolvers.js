@@ -11,12 +11,17 @@ const regexStrings = [
 	id:2,
 	regexStr:'^\\d+(\\.\\d{1,2})?$',
 	errorMsg:'Please check the input value'
+},
+{
+	id:3,
+	regexStr:'[-a-zA-Z0-9@:%_\\+.~#?&//=]{2,256}\\.[a-z]{2,4}\\b(\\/[-a-zA-Z0-9@:%_\\+.~#?&//=]*)?',
+	errorMsg:'Please input a valid URL'
 }
 ];
 
 const components =[
 {
-	id:1,
+	id:0,
 	type:'text',
 	label: 'Name',
 	value: '',
@@ -26,36 +31,11 @@ const components =[
 	description: 'Full Name',
 	erroMsgs: '',
 	min:1,
-	max:100
+	max:100,
+	options:[]
 },
 {
-	id:2,
-	type:'text',
-	label: 'Phone',
-	value: '',
-	mask: '00-000-000000',
-	placeholder: 'xx-xxx-xxxxxx',
-	regex: [],
-	description: 'Mobile Phone Number',
-	errorMsgs: '',
-	min:1,
-	max:100
-},
-{
-	id:3,
-	type:'number',
-	label: 'Weight',
-	value: '',
-	mask: '',
-	placeholder: '0.0',
-	regex: [],
-	description: '',
-	errorMsgs:'',
-	min:1,
-	max:100
-},
-{
-	id:4,
+	id:1,
 	type:'number',
 	label: 'Age',
 	value: '',
@@ -65,10 +45,11 @@ const components =[
 	description: '',
 	errorMsgs:'',
 	min:1,
-	max:100
+	max:100,
+	options:[]
 },
 {
-	id:5,
+	id:2,
 	type:'email',
 	label: 'Email',
 	value: '',
@@ -78,10 +59,11 @@ const components =[
 	description: 'Primary Email',
 	errorMsgs:'',
 	min:1,
-	max:100
+	max:100,
+	options:[]
 },
 {
-	id:6,
+	id:3,
 	type:'number',
 	label: 'Price',
 	value: '',
@@ -91,10 +73,11 @@ const components =[
 	description: 'Currency',
 	errorMsgs:'',
 	min:1,
-	max:100
+	max:100,
+	options:[]
 },
 {
-	id:7,
+	id:4,
 	type:'boolean',
 	label: 'Agreed',
 	value: 'false',
@@ -104,7 +87,92 @@ const components =[
 	description: 'Do you agree to the terms and conditions?',
 	errorMsgs:'',
 	min:0,
-	max:0
+	max:0,
+	options:[]
+},
+{
+	id:5,
+	type:'address',
+	label: 'Address',
+	value: '',
+	mask: '',
+	placeholder: '',
+	regex: [],
+	description: '',
+	errorMsgs:'',
+	min:0,
+	max:200,
+	options:[]
+},
+{
+	id:6,
+	type:'select',
+	label: 'Color',
+	value: '',
+	mask: '',
+	placeholder: 'Select a color',
+	regex: [],
+	description: '',
+	errorMsgs:'',
+	min:0,
+	max:200,
+	options:['Blue','Red','Yellow','Green']
+},
+{
+	id:7,
+	type:'textarea',
+	label: 'Description',
+	value: '',
+	mask: '',
+	placeholder: '',
+	regex: [],
+	description: '',
+	errorMsgs:'',
+	min:0,
+	max:1000,
+	options:[]
+},
+{
+	id:8,
+	type:'text',
+	label: 'Phone',
+	value: '',
+	mask: '00-000-000000',
+	placeholder: 'xx-xxx-xxxxxx',
+	regex: [],
+	description: 'Mobile Phone Number',
+	errorMsgs: '',
+	min:1,
+	max:100,
+	options:[]
+},
+{
+	id:9,
+	type:'number',
+	label: 'Weight',
+	value: '',
+	mask: '',
+	placeholder: '0.0',
+	regex: [],
+	description: '',
+	errorMsgs:'',
+	min:1,
+	max:100,
+	options:[]
+},
+{
+	id:10,
+	type:'text',
+	label: 'Website',
+	value: '',
+	mask: '',
+	placeholder: 'www.google.com',
+	regex: [regexStrings[2]],
+	description: '',
+	errorMsgs:'',
+	min:0,
+	max:1000,
+	options:[]
 }
 ];
 

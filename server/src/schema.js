@@ -20,7 +20,8 @@ type Component{
   description: String,
   errorMsgs: String,
   min: Int,
-  max: Int
+  max: Int,
+  options:[String]
 }
 
 type Query { 
