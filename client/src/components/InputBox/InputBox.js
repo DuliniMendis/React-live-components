@@ -1,8 +1,15 @@
 import React from 'react';
 import { gql,  graphql , compose } from 'react-apollo';
 import './InputBox.css';
-import {FormGroup,InputGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap'
 
+import EmailInputBox from '../../components/EmailInputBox';
+import IntegerInputBox from '../../components/IntegerInputBox';
+import CurrencyInputBox from '../../components/CurrencyInputBox';
+import CheckBox from '../../components/CheckBox';
+import TextBox from '../../components/TextBox';
+import AddressBox from '../../components/AddressBox';
+import SelectBox from '../../components/SelectBox';
+import TextArea from '../../components/TextArea';
 
 class InputBox extends React.Component {
 
@@ -22,28 +29,37 @@ class InputBox extends React.Component {
       description: "",
       errorMsgs: new Set(),
       min: "",
-      max: ""
+      max: "",
+      options: ""
     };
+
   }
 
   updateState = (data) => {
     let errorMsgs = this.state.errorMsgs;
-    
-    this.setState({
-      type:data.loading ? "" : data.component.type,
-      value:data.loading ? "" : data.component.value,
-      label:data.loading ? "" : data.component.label,
-      mask: data.loading ? "" : data.component.mask,
-      placeholder: data.loading ? "" : data.component.placeholder,
-      regex: data.loading ? "" : data.component.regex,
-      description: data.loading ? "" : data.component.description,
-      errorMsgs: data.loading ? new Set() : (data.component.errorMsgs?errorMsgs.add(data.component.errorMsgs): new Set()),
-      min: data.loading ? "" : data.component.min,
-      max: data.loading ? "" : data.component.max,
-    });
+
+    if(!data.loading){
+      if(data.component.errorMsgs)
+        errorMsgs.add(data.component.errorMsgs)
+
+      this.setState({
+        type: data.component.type,
+        value: data.component.value,
+        label: data.component.label,
+        mask: data.component.mask,
+        placeholder: data.component.placeholder,
+        regex: data.component.regex,
+        description: data.component.description,
+        errorMsgs: errorMsgs,
+        min: data.component.min,
+        max: data.component.max,
+        options: data.component.options,
+      });
+    }
 
     if(this.state.errorMsgs.size>0)
       this.setState({error:true});
+
 
   }
 
@@ -88,6 +104,7 @@ class InputBox extends React.Component {
               errorMsgs
               min
               max
+              options
             }
           }
           `,
@@ -108,7 +125,9 @@ class InputBox extends React.Component {
 
   //textbox value changes
   handleChange = (evt) => {
-    this.applyMask(evt.target.value, evt.target.dataset.mask);     
+
+    this.applyMask(evt.target.value, evt.target.dataset.mask);    
+
   }
 
   //handles when enter is pressed --> send a mutation to the server
@@ -122,20 +141,30 @@ class InputBox extends React.Component {
   }
 
   handleOnBlur = (evt) => {
-    this.submit();
+
+    if(this.props.id!=8)
+      this.submit();
+    else
+      this.setState({errorState:"error"});
   }
 
 
-
+//textbox value changes
+  handleCheckboxChange = (evt) => {
+    this.setState({value:this.state.value==="false"?"true":"false"},()=>{
+      this.submit();   
+    });    
+  }
 
   submit = () => {
+
 
     if(this.validate(this.state.value,this.state.regex)){
 
       this.setState({error:false});
 
       this.props.mutate({
-        variables: { id:this.state.id, value:this.state.value }
+        variables: { id:this.props.id, value:this.state.value }
       })
       .then(({ data }) => {})
       .catch((error) => {
@@ -152,30 +181,48 @@ class InputBox extends React.Component {
 
   validate = (value,patterns) => {
 
+
     let result = true;
-    for(let i=0;i<patterns.length;i++){
-     let re = new RegExp(patterns[i].regexStr);
-     console.log(patterns[i].regexStr, re.test(value))
-     if(!re.test(value)){
-      this.setState({errorMsgs:this.state.errorMsgs.add(patterns[i].errorMsg)});
+    let errorMsgs = this.state.errorMsgs;
+
+    if(value.length<this.state.min){
+      errorMsgs.add("Required field");
+      this.setState({       
+        errorMsgs:errorMsgs
+      });
       result = false;
     }
-  }
-  if(value.length<this.state.min){
-    this.setState({       
-      errorMsgs:this.state.errorMsgs.add("Required field")
-    });
-    result = false;
-  }
-  if(value.length>this.state.max){
-    result = false;
-    this.setState({       
-      errorMsgs:this.state.errorMsgs.add("Input exceeds maximum length")
-    });
+    else{
+      if(this.state.errorMsgs.size>0){
+        errorMsgs.delete("Required field");
+        this.setState({       
+          errorMsgs:errorMsgs
+        });
+      }
+      for(let i=0;i<patterns.length;i++){
+       let re = new RegExp(patterns[i].regexStr);       
+       if(!re.test(value)){
+        errorMsgs.add(patterns[i].errorMsg);
+        this.setState({errorMsgs:errorMsgs});
+        result = false;
+      }
+      else{
+        errorMsgs.delete(patterns[i].errorMsg);
+        this.setState({errorMsgs:errorMsgs});
+      }
+    }
+
+    if(value.length>this.state.max){
+      result = false;
+      errorMsgs.add("Input exceeds maximum length");
+      this.setState({       
+        errorMsgs:this.state.errorMsgs
+      });
+    }
   }
 
 
-  if(result===false || this.state.error===true){
+  if(result===false){
    this.setState({
     errorState:"error"        
   });
@@ -186,8 +233,11 @@ class InputBox extends React.Component {
   });
 }
 
+
 return result;
 }
+
+
 
   // Replace `x` characters with characters from `data`
   applyMask = (data,mask) => {
@@ -225,92 +275,138 @@ return result;
     this.setState({value:targetVal});
   }
 
+  handleAddressSelect = (place) => {
+    this.setState({value:place, errorState:"success"});
+    this.submit();
+  }
+
+
+
 
   render() {
 
-    //while data is loading
-    if (this.props.data.loading) {     
-      return (
-        <div>
-        "loading";
-        </div>
-        )
-    } 
-    //after data loads do this
-    else{  
+     let errorDiv = "";
+     if(this.state.error===true){
+      let errorArr = [...this.state.errorMsgs];
+      errorDiv = errorArr.map((item,i)=>{
+        return  (<div className="error" key={"e"+i}>{item}</div>);
+      });
+     }
+ 
 
-     let errorDiv = this.state.error===true?(<div className="error">
-       {this.state.error?this.state.errorMsgs:''}
-       </div>):"";
-
-     if(this.props.hasAddon)
-
-      return (
-       <div className="askComponent">
-
-         <FormGroup validationState={this.state.errorState}>
-
-           <ControlLabel>{this.state.label}</ControlLabel>
-
-           <InputGroup>
-
-             <InputGroup.Addon>{this.props.addon}</InputGroup.Addon>
-
-             <input
-             className="form-control"
+    switch(this.props.id) {     
+      case 1:
+          return (<IntegerInputBox 
+            label={this.state.label}
+            description={this.state.description}
+            type={this.state.type} 
+             value={this.state.value} 
+             id={this.props.id}
+             handleChange={this.handleChange} 
+             handleKeyUp={this.handleKeyUp}
+             handleOnBlur={this.handleOnBlur}
+             mask={this.state.mask} 
+             placeholder={this.state.placeholder}
+             errorState={this.state.errorState}
+             errorDiv={errorDiv} />);          
+      case 2:
+          return (<EmailInputBox 
+             label={this.state.label}
+            description={this.state.description}
+            type={this.state.type} 
+             value={this.state.value} 
+             id={this.props.id}
+             handleChange={this.handleChange} 
+             handleKeyUp={this.handleKeyUp}
+             handleOnBlur={this.handleOnBlur}
+             mask={this.state.mask} 
+             placeholder={this.state.placeholder}
+              errorState={this.state.errorState}
+             errorDiv={errorDiv} />);
+      case 3:
+          return (<CurrencyInputBox 
+             label={this.state.label}
+            description={this.state.description}
+            type={this.state.type} 
+             value={this.state.value} 
+             id={this.props.id}
+             handleChange={this.handleChange} 
+             handleKeyUp={this.handleKeyUp}
+             handleOnBlur={this.handleOnBlur}
+             mask={this.state.mask} 
+             placeholder={this.state.placeholder}
+              errorState={this.state.errorState}
+             errorDiv={errorDiv} />);
+        case 4:
+          return (<CheckBox 
+             label={this.state.label}
+             description={this.state.description}
              type={this.state.type} 
              value={this.state.value} 
              id={this.props.id}
-             onChange={this.handleChange} 
-             onKeyUp={this.handleKeyUp}
-             onBlur={this.handleOnBlur}
-             data-mask={this.state.mask} 
-             onKeyPress={this.props.keyPress}
-             placeholder={this.state.placeholder}/>
+             handleChange={this.handleCheckboxChange}  
+             errorState={this.state.errorState}
+             errorDiv={errorDiv} />);
+         case 5:
+          return (<AddressBox 
+             label={this.state.label}
+             description={this.state.description}
+             type={this.state.type} 
+             value={this.state.value} 
+             id={this.props.id}
+             handleChange={this.handleChange} 
+             handleKeyUp={this.handleKeyUp}
+             handleOnBlur={this.handleOnBlur}
+             handleAddressSelect={this.handleAddressSelect}
+             mask={this.state.mask} 
+             placeholder={this.state.placeholder}
+             errorState={this.state.errorState}
+             errorDiv={errorDiv} />);
+          case 6:
+          return (<SelectBox 
+             label={this.state.label}
+             description={this.state.description}
+             type={this.state.type} 
+             value={this.state.value} 
+             id={this.props.id}
+             handleChange={this.handleChange}              
+             handleOnBlur={this.handleOnBlur}
+             placeholder={this.state.placeholder}
+             options={this.state.options}
+             errorState={this.state.errorState}
+             errorDiv={errorDiv} />);
+          case 7:
+          return (<TextArea
+             label={this.state.label}
+             description={this.state.description}
+             type={this.state.type} 
+             value={this.state.value} 
+             id={this.props.id}
+             handleChange={this.handleChange}              
+             handleOnBlur={this.handleOnBlur}
+             placeholder={this.state.placeholder}
+             errorState={this.state.errorState}
+             errorDiv={errorDiv} />);
+      default:
+          return (<TextBox 
+             label={this.state.label}
+            description={this.state.description}
+            type={this.state.type} 
+             value={this.state.value} 
+             id={this.props.id}
+             handleChange={this.handleChange} 
+             handleKeyUp={this.handleKeyUp}
+             handleOnBlur={this.handleOnBlur}
+             mask={this.state.mask} 
+             placeholder={this.state.placeholder}
+              errorState={this.state.errorState}
+             errorDiv={errorDiv} />);
+    }
 
-           </InputGroup>
-
-           <FormControl.Feedback />
-           <HelpBlock>{this.state.description}</HelpBlock>
-         </FormGroup>
-
-         {errorDiv} 
-
-       </div>
-       );
-
-    else
-
-      return (
-       <div className="askComponent">
-         <FormGroup validationState={this.state.errorState}>
-
-           <ControlLabel>{this.state.label}</ControlLabel>        
-           
-           <input
-           className="form-control"
-           type={this.state.type} 
-           value={this.state.value} 
-           id={this.props.id}
-           onChange={this.handleChange} 
-           onKeyUp={this.handleKeyUp}
-           onBlur={this.handleOnBlur}
-           data-mask={this.state.mask} 
-           onKeyPress={this.props.keyPress}
-           placeholder={this.state.placeholder}/>
-
-           <FormControl.Feedback />
-           <HelpBlock>{this.state.description}</HelpBlock>
-            {errorDiv} 
-
-         </FormGroup>
-
-        
-       </div>
-       );
+      
   }
 
-} 
+ 
 }
 
 //query to get component details
@@ -331,6 +427,7 @@ const componentQuery = gql`query component($id: ID!) {
     errorMsgs
     min
     max
+    options
   }
 }`
 
@@ -353,6 +450,7 @@ mutation changeComponent($id: ID!, $value: String!) {
     errorMsgs
     min
     max
+    options
   }
 }
 `;

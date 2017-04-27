@@ -1,0 +1,33 @@
+
+.error{
+	color:#f00;
+	font-size:10px;
+	font-family:'Helvetica';
+	margin-top:5px;
+
+}
+
+.description{
+	font-family:"Helvetica";
+	padding:5px;
+	color:#999;
+	font-size:12px;
+}
+
+.askComponent{
+	margin:10px;
+}
+
+.pac-container{
+	background-color:#3b5c91;
+	
+}
+
+.pac-item{
+	padding:5px;
+	color:#fff;
+}
+
+.pac-item:hover{
+	background-color:#5273a8;
+}

@@ -1,10 +1,10 @@
 import React from 'react';
-import './TextBox.css';
+import './TextArea.css';
 import {FormGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap';
 
 
 
-export default class TextBox extends React.Component {
+export default class TextArea extends React.Component {
 
   
 
@@ -21,17 +21,17 @@ export default class TextBox extends React.Component {
 
 
 
-       <input
-       className="form-control"
-       type={this.props.type} 
-       value={this.props.value} 
+       <textarea
+       rows="4"
+       className="form-control textarea"
        id={this.props.id}
+       value={this.props.value}
        onChange={this.props.handleChange} 
        onKeyUp={this.props.handleKeyUp}
        onBlur={this.props.handleOnBlur}
        data-mask={this.props.mask} 
-       placeholder={this.props.placeholder}/>
-
+       placeholder={this.props.placeholder}>
+       </textarea>      
      
 
        <FormControl.Feedback />

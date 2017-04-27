@@ -1,8 +1,10 @@
 
 .error{
-	color:#B25451;
+	color:#f00;
 	font-size:10px;
 	font-family:'Helvetica';
+	margin-top:5px;
+
 }
 
 .description{
@@ -14,4 +16,17 @@
 
 .askComponent{
 	margin:10px;
+}
+
+.pac-container{
+	background-color:#3b5c91;
+}
+
+.pac-item{
+	padding:5px;
+	color:#fff;
+}
+
+.pac-item:hover{
+	background-color:#5273a8;
 }
