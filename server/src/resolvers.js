@@ -16,6 +16,11 @@ const regexStrings = [
 	id:3,
 	regexStr:'[-a-zA-Z0-9@:%_\\+.~#?&//=]{2,256}\\.[a-z]{2,4}\\b(\\/[-a-zA-Z0-9@:%_\\+.~#?&//=]*)?',
 	errorMsg:'Please input a valid URL'
+},
+{
+	id:4,
+	regexStr:'^([01]?[0-9]|2[0-3]):[0-5][0-9]$',
+	errorMsg:'Please input a valid time'
 }
 ];
 
@@ -134,6 +139,34 @@ const components =[
 },
 {
 	id:8,
+	type:'date',
+	label: 'Date',
+	value: '',
+	mask: 'dd-mm-yyyy',
+	placeholder: 'Select a date',
+	regex: [],
+	description: '',
+	errorMsgs:'',
+	min:0,
+	max:1000,
+	options:[]
+},
+{
+	id:9,
+	type:'time',
+	label: 'Time',
+	value: '',
+	mask: '00:00',
+	placeholder: 'Select a time',
+	regex: [regexStrings[3]],
+	description: '',
+	errorMsgs:'',
+	min:0,
+	max:1000,
+	options:[]
+},
+{
+	id:10,
 	type:'text',
 	label: 'Phone',
 	value: '',
@@ -147,7 +180,7 @@ const components =[
 	options:[]
 },
 {
-	id:9,
+	id:11,
 	type:'number',
 	label: 'Weight',
 	value: '',
@@ -161,7 +194,7 @@ const components =[
 	options:[]
 },
 {
-	id:10,
+	id:12,
 	type:'text',
 	label: 'Website',
 	value: '',
@@ -173,6 +206,65 @@ const components =[
 	min:0,
 	max:1000,
 	options:[]
+},
+{
+	id:13,
+	type:'dnd',
+	label: 'Drag&Drop',
+	value: '',
+	mask: '',
+	placeholder: '',
+	regex: [],
+	description: '',
+	errorMsgs:'',
+	min:0,
+	max:1000,
+	options: []
+  
+}
+];
+
+const dnDComponents = [
+{
+	id:0,
+	panels: [{
+              id:0,
+              label:"Applied",
+              items:[{
+                id:0,
+                label:"Apple"
+              },
+              {
+                id:1,
+                label:"Orange"
+              }]
+              },
+              {
+              id:1,
+              label:"Screened",
+              items:[]
+              },
+              {
+              id:2,
+              label:"Interviewed",
+               items:[]
+              },
+              {
+              id:3,
+              label:"Shortlisted",
+               items:[]
+              },
+              {
+              id:4,
+              label:"Offer",
+               items:[]
+              },
+              {
+              id:5,
+              label:"Placed",
+               items:[]
+              },
+    ]
 }
 ];
 
@@ -183,7 +275,11 @@ export const resolvers = {
 			let result = components.find((item) => { return item.id == args.id });
 			console.log(result)
 			return result;
-		}
+		},
+		dnDComponent: (args) => {
+			let result = dnDComponents.find((item) => { return item.id == args.id });		
+			return result;
+		} 
 	},
 	Mutation: {		
 		changeComponent: (root, args) => {
@@ -194,11 +290,28 @@ export const resolvers = {
 
 			pubsub.publish('component', component);
 			return component;
+		},
+		changeDnDComponent: (args) => {
+			let component = dnDComponents.find((item)=>{
+				return item.id == args.id;
+			});		
+			let panel = component.find((item)=>{
+				return item.id == args.sourcePanelID
+			})	
+
+			component.value = args.value;
+
+			pubsub.publish('component', component);
+			return component;
 		}
 	},
 	Subscription: {		
 		component: (args) => {
 			let result = components.find((item) => { return item.id == args.id });
+			return result;
+		},
+		dnDComponent: (args) => {
+			let result = dnDComponents.find((item) => { return item.id == args.id });		
 			return result;
 		}
   }
