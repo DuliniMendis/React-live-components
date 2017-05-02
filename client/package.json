@@ -5,15 +5,22 @@
   "dependencies": {
     "apollo-test-utils": "^0.1.1",
     "classnames": "^2.2.5",
+    "dateformat": "^2.0.0",
     "false": "0.0.4",
     "graphql": "^0.9.1",
     "graphql-tools": "^0.10.0",
     "node-sass": "^4.5.2",
     "npm-run-all": "^4.0.2",
+    "rc-calendar": "^8.1.2",
+    "rc-time-picker": "^2.3.5",
     "react": "^15.4.2",
     "react-apollo": "^0.13.2",
     "react-bootstrap": "^0.30.10",
+    "react-bootstrap-date-picker": "^5.0.1",
+    "react-dnd": "^2.3.0",
+    "react-dnd-html5-backend": "^2.3.0",
     "react-dom": "^15.4.2",
+    "react-onclickoutside": "^5.11.1",
     "subscriptions-transport-ws": "^0.5.5-alpha.0"
   },
   "devDependencies": {
