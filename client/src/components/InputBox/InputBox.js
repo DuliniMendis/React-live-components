@@ -2,14 +2,16 @@ import React from 'react';
 import { gql,  graphql , compose } from 'react-apollo';
 import './InputBox.css';
 
-import EmailInputBox from '../../components/EmailInputBox';
-import IntegerInputBox from '../../components/IntegerInputBox';
-import CurrencyInputBox from '../../components/CurrencyInputBox';
-import CheckBox from '../../components/CheckBox';
-import TextBox from '../../components/TextBox';
-import AddressBox from '../../components/AddressBox';
-import SelectBox from '../../components/SelectBox';
-import TextArea from '../../components/TextArea';
+import EmailInputBox from '../EmailInputBox';
+import IntegerInputBox from '../IntegerInputBox';
+import CurrencyInputBox from '../CurrencyInputBox';
+import CheckBox from '../CheckBox';
+import TextBox from '../TextBox';
+import AddressBox from '../AddressBox';
+import SelectBox from '../SelectBox';
+import TextArea from '../TextArea';
+import DateInputBox from '../DateInputBox';
+import TimeInputBox from '../TimeInputBox';
 
 class InputBox extends React.Component {
 
@@ -124,8 +126,8 @@ class InputBox extends React.Component {
   }
 
   //textbox value changes
-  handleChange = (evt) => {
-
+  handleChange = (evt,formattedValue) => {
+    
     this.applyMask(evt.target.value, evt.target.dataset.mask);    
 
   }
@@ -162,7 +164,6 @@ class InputBox extends React.Component {
     if(this.validate(this.state.value,this.state.regex)){
 
       this.setState({error:false});
-
       this.props.mutate({
         variables: { id:this.props.id, value:this.state.value }
       })
@@ -178,9 +179,15 @@ class InputBox extends React.Component {
     }
   }
 
+  changeValue = (value) => {
+    this.setState({
+      value: value
+    },()=>{ this.submit(); });
+    
+  }
+
 
   validate = (value,patterns) => {
-
 
     let result = true;
     let errorMsgs = this.state.errorMsgs;
@@ -200,7 +207,7 @@ class InputBox extends React.Component {
         });
       }
       for(let i=0;i<patterns.length;i++){
-       let re = new RegExp(patterns[i].regexStr);       
+       let re = new RegExp(patterns[i].regexStr); 
        if(!re.test(value)){
         errorMsgs.add(patterns[i].errorMsg);
         this.setState({errorMsgs:errorMsgs});
@@ -384,6 +391,33 @@ return result;
              id={this.props.id}
              handleChange={this.handleChange}              
              handleOnBlur={this.handleOnBlur}
+             placeholder={this.state.placeholder}
+             errorState={this.state.errorState}
+             errorDiv={errorDiv} />);
+          case 8:
+          return (<DateInputBox
+             label={this.state.label}
+             description={this.state.description}
+             type={this.state.type} 
+             value={this.state.value} 
+             id={this.props.id}
+             changeValue={this.changeValue}             
+             mask={this.state.mask}
+             placeholder={this.state.placeholder}
+             errorState={this.state.errorState}
+             errorDiv={errorDiv} />);
+          case 9:
+          return (<TimeInputBox
+             label={this.state.label}
+             description={this.state.description}
+             type={this.state.type} 
+             value={this.state.value} 
+             id={this.props.id}
+             handleChange={this.handleChange} 
+             handleKeyUp={this.handleKeyUp}
+             handleOnBlur={this.handleOnBlur} 
+             changeValue={this.changeValue}    
+             mask={this.state.mask}
              placeholder={this.state.placeholder}
              errorState={this.state.errorState}
              errorDiv={errorDiv} />);

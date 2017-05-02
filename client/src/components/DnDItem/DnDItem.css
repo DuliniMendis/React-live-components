@@ -1,0 +1,11 @@
+.dnd-item {
+  margin-bottom: 3px;
+  padding: 10px;
+  color: #212121;
+  font-family: Roboto, Helvetica, sans-serif;
+  font-size: 12px;
+  -webkit-transition: background-color 0.5s;
+  transition: background-color 0.5s;
+  text-align: center;
+  cursor: move;
+  background-color: #26A69A; }

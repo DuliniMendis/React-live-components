@@ -8,6 +8,7 @@ export default class AddressBox extends React.Component {
 
   componentDidMount() {
    
+   try{
       this.autocomplete = new window.google.maps.places.Autocomplete(this.textInput, { types: ['geocode'] });
        if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -28,6 +29,10 @@ export default class AddressBox extends React.Component {
           this.props.handleAddressSelect(place);
             
       });
+    }
+    catch(error){
+      console.log("Cannot load google address lookup");
+    }
     
   }
 

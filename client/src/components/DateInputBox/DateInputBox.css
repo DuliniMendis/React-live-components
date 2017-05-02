@@ -13,12 +13,5 @@
 .askComponent {
   margin: 10px; }
 
-.pac-container {
-  background-color: #3b5c91; }
-
-.pac-item {
-  padding: 5px;
-  color: #fff; }
-
-.pac-item:hover {
-  background-color: #5273a8; }
+li {
+  color: #444; }

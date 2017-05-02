@@ -28,7 +28,7 @@ export default class SelectBox extends React.Component {
 
       <FormControl 
       componentClass="select" 
-      placeholder="select"      
+   
       value={this.props.value} 
       id={this.props.id.toString()}
       onChange={this.props.handleChange}       

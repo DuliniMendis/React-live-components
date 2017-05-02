@@ -1,0 +1,19 @@
+@import '../../styles/theme.scss';
+
+
+.dnd-item{		
+	margin-bottom:3px;
+	padding:10px;
+	color: $color-dark;
+	font-family: $font-text;
+	font-size: $font-size-s;
+	-webkit-transition: background-color $hover-delay;
+    transition: background-color $hover-delay;
+    text-align:center;
+    cursor:move;
+    background-color:$color-primary;
+}
+
+
+
+
